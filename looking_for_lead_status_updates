@@ -1,0 +1,20 @@
+SELECT ls.status,
+       ls.sub_status,
+       count(*)
+FROM prod_dir_production.lead_statuses ls,
+     prod_dir_production.local_resource_leads lrl,
+     prod_dir_production.local_resources lr,
+     prod_dir_production.local_properties lp,
+     prod_dir_production.local_chains lc,
+     prod_dir_production.move_ins mi
+WHERE ls.local_resource_lead_id = lrl.id
+  AND lr.id = lrl.local_resource_id
+  AND lp.id = lr.local_property_id
+  AND lc.id = lp.local_chain_id
+  AND lrl.id = mi.local_resource_lead_id
+  AND ls.source = 'provider'
+  AND lc.name = 'Atria'
+  AND mi.created_at BETWEEN '2019-10-01' AND '2019-10-31'
+GROUP BY 1,
+         2
+ORDER BY 3 DESC
