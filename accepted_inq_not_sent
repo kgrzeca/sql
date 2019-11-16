@@ -1,0 +1,19 @@
+-- accepted inquiries that were not sent to advisors (csr_eligible = false), are not AgentInquiries, and are from affiliates
+SELECT i.id,
+       i.last_name,
+       i.contact_id,
+       i.source,
+       i.affiliate_lead_id,
+       i.created_at,
+       i.creation_method,
+       i.type,
+       i.suspected,
+       i.call_triggered
+FROM prod_dir_production.inquiries i
+WHERE i.status = 'accepted'
+  AND i.created_at > '2019-07-01'
+  AND i.type IN ('ProviderInquiry',
+                 'TypeInquiry')
+  AND i.csr_eligible = 'false'
+  AND i.source != 'caring.com'
+  AND i.affiliate_lead_id is NOT NULL
